@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Management Dashboard</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #dbeafe, #e9d5ff);
+            margin: 0;
+            padding: 25px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #312e81;
+            margin: 30px 0;
+            font-size: 32px;
+        }
+
+        .navbar {
+            background: #312e81;
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 13px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .navbar a:hover {
+            background: #6366f1;
+        }
+
+        .welcome {
+            text-align: center;
+            color: #475569;
+            font-size: 16px;
+            margin-bottom: 35px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.10);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 5px solid #4338ca;
+        }
+
+        .card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .card h2 {
+            color: #312e81;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .count {
+            font-size: 42px;
+            font-weight: bold;
+            color: #4338ca;
+            margin: 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="student.html">Add Student</a>
+        <a href="students.html">View Students</a>
+        <a href="faculty.html">Add Faculty</a>
+        <a href="faculties.html">View Faculty</a>
+        <a href="course.html">Add Course</a>
+        <a href="courses.html">View Courses</a>
+        <a href="attendance.html">Add Attendance</a>
+        <a href="attendances.html">View Attendance</a>
+        <a href="fee.html">Add Fee</a>
+        <a href="fees.html">View Fees</a>
+    </nav>
+
+    <h1>College Management Dashboard</h1>
+
+    <p class="welcome">
+        Welcome to College Management System!
+        Manage Students, Faculty, Courses, Attendance and Fees.
+    </p>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>Total Students</h2>
+            <p class="count" id="students">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Total Faculty</h2>
+            <p class="count" id="faculty">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Total Courses</h2>
+            <p class="count" id="courses">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Total Attendance</h2>
+            <p class="count" id="attendance">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Total Fees Records</h2>
+            <p class="count" id="fees">0</p>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p>© 2026 College Management System | All Rights Reserved</p>
+    </div>
+
+    <script>
+        async function loadDashboard() {
+            try {
+                const urls = [
+                    '/students',
+                    '/faculty',
+                    '/courses',
+                    '/attendance',
+                    '/fees'
+                ];
+
+                const responses = await Promise.all(
+                    urls.map(url => fetch(url))
+                );
+
+                const data = await Promise.all(
+                    responses.map(response => {
+                        if (!response.ok) {
+                            throw new Error('Unable to load dashboard data');
+                        }
+                        return response.json();
+                    })
+                );
+
+                document.getElementById('students').innerText = data[0].length;
+                document.getElementById('faculty').innerText = data[1].length;
+                document.getElementById('courses').innerText = data[2].length;
+                document.getElementById('attendance').innerText = data[3].length;
+                document.getElementById('fees').innerText = data[4].length;
+
+            } catch (error) {
+                alert('Error loading dashboard data!');
+                console.log(error);
+            }
+        }
+
+        loadDashboard();
+    </script>
+
+</body>
+</html>

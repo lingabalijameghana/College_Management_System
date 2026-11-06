@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Student</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #fee2e2, #e9d5ff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 35px;
+            width: 350px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px #0002;
+        }
+
+        h2 {
+            color: #dc2626;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #991b1b;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Delete Student</h2>
+
+    <p>Enter Student ID to Delete</p>
+
+    <form id="deleteForm">
+        <input type="number" id="id"
+            placeholder="Student ID" min="1" required>
+
+        <button type="submit">Delete Student</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('deleteForm')
+.addEventListener('submit', async function(e) {
+
+    e.preventDefault();
+
+    const id = document.getElementById('id').value;
+
+    if (!confirm('Are you sure you want to delete this student?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/students/' + id, {
+            method: 'DELETE'
+        });
+
+        alert(await response.text());
+
+        if (response.ok) {
+            document.getElementById('deleteForm').reset();
+        }
+
+    } catch (error) {
+        alert('Server connection failed!');
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fee Registration | College Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #dbeafe, #e9d5ff);
+            margin: 0;
+            padding: 25px;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #263b80;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 13px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .navbar a:hover {
+            background: #5268c5;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            text-align: center;
+            color: #263b80;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-top: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #5268c5;
+            box-shadow: 0 0 5px rgba(82,104,197,0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 25px;
+            background: #333399;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #5268c5;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 18px;
+            font-weight: bold;
+            color: #263b80;
+        }
+
+        .footer {
+            text-align: center;
+            color: #777;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+
+        @media(max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 22px;
+                margin: 25px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="student.html">Add Student</a>
+        <a href="students.html">View Students</a>
+        <a href="faculty.html">Add Faculty</a>
+        <a href="faculties.html">View Faculty</a>
+        <a href="course.html">Add Course</a>
+        <a href="courses.html">View Courses</a>
+        <a href="attendance.html">Add Attendance</a>
+        <a href="attendances.html">View Attendance</a>
+        <a href="fee.html">Add Fee</a>
+        <a href="fees.html">View Fees</a>
+    </nav>
+
+    <div class="container">
+
+        <h2>Fee Registration</h2>
+
+        <form id="feeForm">
+
+            <label>Student ID</label>
+            <input type="number" id="student_id"
+                placeholder="Enter Student ID" required min="1">
+
+            <label>Total Fee</label>
+            <input type="number" id="total_fee"
+                placeholder="Enter Total Fee" required min="0">
+
+            <label>Paid Amount</label>
+            <input type="number" id="paid_amount"
+                placeholder="Enter Paid Amount" required min="0">
+
+            <label>Payment Date</label>
+            <input type="date" id="payment_date" required>
+
+            <label>Payment Status</label>
+            <select id="payment_status" required>
+                <option value="">Select Status</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Partial">Partial</option>
+            </select>
+
+            <button type="submit">Add Fee</button>
+
+        </form>
+
+        <h3 id="message"></h3>
+
+        <div class="footer">
+            College Management System | Fee Management
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById('feeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const data = {
+                student_id: document.getElementById('student_id').value,
+                total_fee: document.getElementById('total_fee').value,
+                paid_amount: document.getElementById('paid_amount').value,
+                payment_date: document.getElementById('payment_date').value,
+                payment_status: document.getElementById('payment_status').value
+            };
+
+            try {
+                const response = await fetch('/fees', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.text();
+                document.getElementById('message').innerText = result;
+
+                if (response.ok) {
+                    document.getElementById('feeForm').reset();
+                }
+            } catch (error) {
+                document.getElementById('message').innerText = 'Error adding fee!';
+            }
+        });
+    </script>
+
+</body>
+</html>

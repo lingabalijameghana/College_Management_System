@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Registration | College Management</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #dbeafe, #e0e7ff, #f3e8ff);
+            margin: 0;
+            padding: 25px;
+            min-height: 100vh;
+        }
+
+        /* Navigation Menu */
+        .navbar {
+            background: #243b55;
+            padding: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 13px;
+            border-radius: 5px;
+        }
+
+        .navbar a:hover {
+            background: #007bff;
+        }
+
+        /* Registration Container */
+        .container {
+            max-width: 500px;
+            width: 100%;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            text-align: center;
+            color: #243b55;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 5px rgba(79,70,229,0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 25px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3730a3;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #166534;
+        }
+
+        .footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+
+        @media(max-width: 500px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="student.html">Students</a>
+        <a href="students.html">View Students</a>
+        <a href="faculty.html">Add Faculty</a>
+        <a href="faculties.html">View Faculty</a>
+        <a href="course.html">Courses</a>
+        <a href="attendance.html">Attendance</a>
+        <a href="fee.html">Fees</a>
+    </nav>
+
+    <!-- Faculty Registration -->
+    <div class="container">
+
+        <h2>Faculty Registration</h2>
+
+        <p class="subtitle">College Management System</p>
+
+        <form id="facultyForm">
+
+            <label>Faculty Name</label>
+            <input type="text" id="faculty_name"
+                placeholder="Enter Faculty Name" required>
+
+            <label>Email</label>
+            <input type="email" id="email"
+                placeholder="Enter Email" required>
+
+            <label>Phone Number</label>
+            <input type="text" id="phone"
+                placeholder="Enter Phone Number" required>
+
+            <label>Department</label>
+            <input type="text" id="department"
+                placeholder="Enter Department" required>
+
+            <label>Designation</label>
+            <input type="text" id="designation"
+                placeholder="Enter Designation" required>
+
+            <button type="submit">Add Faculty</button>
+
+        </form>
+
+        <p id="message"></p>
+
+        <div class="footer">
+            © 2026 College Management System
+        </div>
+
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('facultyForm').addEventListener('submit', async function(event) {
+
+            event.preventDefault();
+
+            const facultyData = {
+                faculty_name: document.getElementById('faculty_name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                department: document.getElementById('department').value,
+                designation: document.getElementById('designation').value
+            };
+
+            try {
+                const response = await fetch('/faculty', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(facultyData)
+                });
+
+                const result = await response.text();
+
+                document.getElementById('message').innerText = result;
+
+                if (response.ok) {
+                    document.getElementById('facultyForm').reset();
+                }
+
+            } catch (error) {
+                document.getElementById('message').innerText =
+                    'Error: Faculty could not be added!';
+            }
+
+        });
+    </script>
+
+</body>
+</html>
+

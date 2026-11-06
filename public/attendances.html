@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Attendance | College Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #dbeafe, #e9d5ff);
+            margin: 0;
+            padding: 25px;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #263b80;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 13px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .navbar a:hover {
+            background: #5268c5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 35px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #263b80;
+            margin-bottom: 25px;
+        }
+
+        .refresh {
+            display: block;
+            margin: auto;
+            padding: 12px 22px;
+            background: #333399;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .refresh:hover {
+            background: #5268c5;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 25px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 14px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #333399;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        tr:hover {
+            background: #e8eaff;
+        }
+
+        .footer {
+            text-align: center;
+            color: #777;
+            margin-top: 25px;
+            font-size: 13px;
+        }
+
+        @media(max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="student.html">Add Student</a>
+        <a href="students.html">View Students</a>
+        <a href="faculty.html">Add Faculty</a>
+        <a href="faculties.html">View Faculty</a>
+        <a href="course.html">Add Course</a>
+        <a href="courses.html">View Courses</a>
+        <a href="attendance.html">Add Attendance</a>
+        <a href="attendances.html">View Attendance</a>
+        <a href="fee.html">Add Fee</a>
+        <a href="fees.html">View Fees</a>
+    </nav>
+
+    <div class="container">
+
+        <h1>All Student Attendance</h1>
+
+        <button class="refresh" onclick="loadAttendance()">
+            Refresh Attendance List
+        </button>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Attendance ID</th>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Roll Number</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="attendanceData">
+                    <tr>
+                        <td colspan="6">Loading Attendance...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            College Management System | Attendance Details
+        </div>
+
+    </div>
+
+    <script>
+        function loadAttendance() {
+            fetch('/attendance')
+            .then(response => response.json())
+            .then(data => {
+                let rows = '';
+
+                data.forEach(item => {
+
+                    // Convert date into DD-MM-YYYY format
+                    let date = String(item.attendance_date).substring(0, 10);
+
+                    let parts = date.split('-');
+
+                    let formattedDate =
+                        parts.length === 3
+                        ? parts[2] + '-' + parts[1] + '-' + parts[0]
+                        : date;
+
+                    rows += `
+                        <tr>
+                            <td>${item.attendance_id}</td>
+                            <td>${item.student_id}</td>
+                            <td>${item.student_name || 'N/A'}</td>
+                            <td>${item.roll_no || 'N/A'}</td>
+                            <td>${formattedDate}</td>
+                            <td>${item.status}</td>
+                        </tr>
+                    `;
+                });
+
+                document.getElementById('attendanceData').innerHTML =
+                    rows || '<tr><td colspan="6">No Attendance Records Found</td></tr>';
+            })
+            .catch(error => {
+                document.getElementById('attendanceData').innerHTML =
+                    '<tr><td colspan="6">Unable to Load Attendance</td></tr>';
+
+                console.log('Attendance Fetch Error:', error);
+            });
+        }
+
+        loadAttendance();
+    </script>
+
+</body>
+</html>

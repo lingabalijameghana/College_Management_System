@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Student</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #dbeafe, #e9d5ff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            width: 350px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px #0002;
+        }
+
+        h2 {
+            text-align: center;
+            color: #4338ca;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px;
+            margin: 7px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Update Student</h2>
+
+    <form id="updateForm">
+        <input type="number" id="id" placeholder="Student ID" required>
+        <input type="text" id="roll_no" placeholder="Roll Number" required>
+        <input type="text" id="student_name" placeholder="Student Name" required>
+        <input type="email" id="email" placeholder="Email">
+        <input type="text" id="phone" placeholder="Phone">
+        <input type="text" id="department" placeholder="Department">
+        <input type="number" id="year" placeholder="Year" required>
+
+        <button type="submit">Update Student</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('updateForm')
+.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const id = document.getElementById('id').value;
+
+    const student = {
+        roll_no: document.getElementById('roll_no').value,
+        student_name: document.getElementById('student_name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        department: document.getElementById('department').value,
+        year: document.getElementById('year').value
+    };
+
+    try {
+        const response = await fetch('/students/' + id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(student)
+        });
+
+        alert(await response.text());
+
+    } catch (error) {
+        alert('Server connection failed!');
+    }
+});
+</script>
+
+</body>
+</html>

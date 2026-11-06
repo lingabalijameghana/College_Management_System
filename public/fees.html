@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Fees | College Management System</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #dbeafe, #e9d5ff);
+            margin: 0;
+            padding: 25px;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #312e81;
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 13px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .navbar a:hover {
+            background: #6366f1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+            overflow-x: auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: #312e81;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th {
+            background: #4338ca;
+            color: white;
+            padding: 14px;
+        }
+
+        td {
+            padding: 13px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background: #f1f5ff;
+        }
+
+        tr:hover {
+            background: #e0e7ff;
+        }
+
+        .status {
+            background: #dcfce7;
+            color: #166534;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .buttons a {
+            display: inline-block;
+            background: #4338ca;
+            color: white;
+            padding: 12px 20px;
+            margin: 5px;
+            border-radius: 7px;
+            text-decoration: none;
+        }
+
+        .buttons a:hover {
+            background: #312e81;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="student.html">Add Student</a>
+        <a href="students.html">View Students</a>
+        <a href="faculty.html">Add Faculty</a>
+        <a href="faculties.html">View Faculty</a>
+        <a href="course.html">Add Course</a>
+        <a href="courses.html">View Courses</a>
+        <a href="attendance.html">Add Attendance</a>
+        <a href="attendances.html">View Attendance</a>
+        <a href="fee.html">Add Fee</a>
+        <a href="fees.html">View Fees</a>
+    </nav>
+
+    <div class="container">
+
+        <h2>All Student Fees</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Fee ID</th>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>Total Fee</th>
+                    <th>Paid Amount</th>
+                    <th>Balance</th>
+                    <th>Payment Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="feeTable">
+                <tr>
+                    <td colspan="8">Loading fee details...</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="buttons">
+            <a href="fee.html">Add New Fee</a>
+            <a href="updateFee.html">Update Fee</a>
+            <a href="deleteFee.html">Delete Fee</a>
+            <a href="dashboard.html">Back to Dashboard</a>
+        </div>
+
+    </div>
+
+    <script>
+        async function loadFees() {
+            try {
+                const response = await fetch('/fees');
+
+                if (!response.ok) {
+                    throw new Error('Failed to load fees');
+                }
+
+                const fees = await response.json();
+
+                const table = document.getElementById('feeTable');
+                table.innerHTML = '';
+
+                if (fees.length === 0) {
+                    table.innerHTML =
+                        '<tr><td colspan="8">No fee records found</td></tr>';
+                    return;
+                }
+
+                fees.forEach(fee => {
+                    let date = String(fee.payment_date).substring(0, 10);
+
+                    table.innerHTML += `
+                        <tr>
+                            <td>${fee.fee_id}</td>
+                            <td>${fee.student_id}</td>
+                            <td>${fee.student_name || ''}</td>
+                            <td>₹${fee.total_fee}</td>
+                            <td>₹${fee.paid_amount}</td>
+                            <td>₹${fee.balance}</td>
+                            <td>${date}</td>
+                            <td>
+                                <span class="status">
+                                    ${fee.payment_status}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+            } catch (error) {
+                document.getElementById('feeTable').innerHTML =
+                    '<tr><td colspan="8" class="error">Error loading fees</td></tr>';
+            }
+        }
+
+        loadFees();
+    </script>
+
+</body>
+</html>

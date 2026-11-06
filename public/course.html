@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Course Registration | College Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #dbeafe, #e9d5ff);
+            margin: 0;
+            padding: 25px;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #263b80;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 13px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .navbar a:hover {
+            background: #5268c5;
+        }
+
+        .container {
+            background: white;
+            padding: 35px;
+            width: 100%;
+            max-width: 500px;
+            margin: 40px auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            text-align: center;
+            color: #263b80;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-top: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #5268c5;
+            box-shadow: 0 0 5px rgba(82,104,197,0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 25px;
+            background: #333399;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #5268c5;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 18px;
+            font-weight: bold;
+            color: #263b80;
+        }
+
+        .footer {
+            text-align: center;
+            color: #777;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+
+        @media(max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 22px;
+                margin: 25px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="student.html">Add Student</a>
+    <a href="students.html">View Students</a>
+    <a href="faculty.html">Add Faculty</a>
+    <a href="faculties.html">View Faculty</a>
+    <a href="course.html">Add Course</a>
+    <a href="courses.html">View Courses</a>
+    <a href="attendance.html">Add Attendance</a>
+    <a href="attendances.html">View Attendance</a>
+    <a href="fee.html">Add Fee</a>
+    <a href="fees.html">View Fees</a>
+</nav>
+
+<div class="container">
+
+    <h2>Course Registration</h2>
+
+    <form id="courseForm">
+
+        <label>Course Name</label>
+        <input type="text" id="course_name"
+               placeholder="Enter Course Name" required>
+
+        <label>Course Code</label>
+        <input type="text" id="course_code"
+               placeholder="Enter Course Code" required>
+
+        <label>Department</label>
+        <input type="text" id="department"
+               placeholder="Enter Department" required>
+
+        <label>Credits</label>
+        <input type="number" id="credits"
+               placeholder="Enter Credits" required min="1">
+
+        <button type="submit">Add Course</button>
+
+    </form>
+
+    <p id="message"></p>
+
+    <div class="footer">
+        College Management System | Course Registration
+    </div>
+
+</div>
+
+<script>
+    document.getElementById('courseForm').addEventListener('submit', function(e) {
+
+        e.preventDefault();
+
+        const courseData = {
+            course_name: document.getElementById('course_name').value,
+            course_code: document.getElementById('course_code').value,
+            department: document.getElementById('department').value,
+            credits: document.getElementById('credits').value
+        };
+
+        fetch('/courses', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(courseData)
+        })
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('message').innerText = data;
+            document.getElementById('courseForm').reset();
+        })
+        .catch(error => {
+            document.getElementById('message').innerText =
+                'Error adding course';
+            console.log(error);
+        });
+
+    });
+</script>
+
+</body>
+</html>

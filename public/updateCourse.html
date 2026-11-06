@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Course</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f7;
+            text-align: center;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #243b64;
+        }
+
+        form {
+            background: white;
+            width: 350px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            background: #243b64;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #message {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Update Course Details</h1>
+
+    <form id="updateForm">
+        <input type="number" id="course_id"
+            placeholder="Course ID" required>
+
+        <input type="text" id="course_name"
+            placeholder="Course Name" required>
+
+        <input type="text" id="course_code"
+            placeholder="Course Code" required>
+
+        <input type="text" id="department"
+            placeholder="Department" required>
+
+        <input type="number" id="credits"
+            placeholder="Credits" required>
+
+        <button type="submit">Update Course</button>
+
+        <p id="message"></p>
+    </form>
+
+    <script>
+        document.getElementById('updateForm')
+        .addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('course_id').value;
+
+            const courseData = {
+                course_name: document.getElementById('course_name').value,
+                course_code: document.getElementById('course_code').value,
+                department: document.getElementById('department').value,
+                credits: document.getElementById('credits').value
+            };
+
+            fetch('/courses/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(courseData)
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('message').innerText = data;
+            })
+            .catch(error => {
+                document.getElementById('message').innerText =
+                    'Error updating course!';
+                console.log(error);
+            });
+        });
+    </script>
+
+</body>
+</html>
